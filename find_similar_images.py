@@ -17,14 +17,29 @@ def find_similar_images(userpath, hashfunc = imagehash.average_hash):
     
     image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
     images = {}
+
+    int_values = []
     for img in sorted(image_filenames):
         hash = hashfunc(Image.open(img))
         images[hash] = images.get(hash, []) + [img]
+
+	simple_int = int(hash.__hash__())
+	int_values.append(simple_int)
+	print(simple_int)
     
     for k, img_list in six.iteritems(images):
         if len(img_list) > 1:
             print(" ".join(img_list))
 
+    import numpy as np
+    a = np.array(int_values)
+    print(np.mean(a))
+
+
+    import matplotlib.pyplot as plt
+    plt.hist(a, bins='auto')  # plt.hist passes it's arguments to np.histogram
+    plt.title("Histogram with 'auto' bins")
+    plt.show()
 
 if __name__ == '__main__':
     import sys, os
